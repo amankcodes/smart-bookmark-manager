@@ -112,33 +112,6 @@ Now updates appear instantly across open tabs.
 
 ---
 
-## Setup Instructions
-
-Clone the repository:
-
-```
-git clone https://github.com/amankcodes/smart-bookmark-manager.git
-```
-
-Install dependencies:
-
-```
-npm install
-```
-
-Run the development server:
-
-```
-npm run dev
-```
-
-Create a `.env.local` file and add your Supabase credentials:
-
-```
-NEXT_PUBLIC_SUPABASE_URL=your_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
-```
----
 ## Future Improvements
 
 * Bookmark categories or tags

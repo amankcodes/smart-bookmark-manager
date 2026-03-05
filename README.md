@@ -1,37 +1,154 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Smart Bookmark Manager
 
-First, run the development server:
+A simple full-stack bookmark manager built with **Next.js** and **Supabase**.
+Users can sign in with Google, save personal bookmarks, and see updates in real-time across browser tabs.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Live Demo
+
+(Will be added after deployment)
+
+---
+
+## Tech Stack
+
+* **Next.js (App Router)** – Frontend and application structure
+* **Supabase** – Authentication, Database, Realtime updates
+* **Tailwind CSS / Basic Styling** – UI styling
+* **Vercel** – Deployment
+
+---
+
+## Features
+
+* Google OAuth login (no email/password)
+* Add bookmarks (Title + URL)
+* Delete bookmarks
+* Bookmarks are **private per user**
+* **Realtime updates** across multiple tabs
+* Simple responsive UI
+
+---
+
+## How It Works
+
+1. User signs in using **Google OAuth** through Supabase.
+2. After login, the user's `user_id` is used to store bookmarks.
+3. Each bookmark is saved in the `bookmarks` table with:
+
+   * `title`
+   * `url`
+   * `user_id`
+4. Queries filter bookmarks by the logged-in user's `user_id`, ensuring privacy.
+5. Supabase **Realtime subscriptions** listen to changes in the bookmarks table and automatically update the UI.
+
+---
+
+## Database Schema
+
+Table: `bookmarks`
+
+Columns:
+
+* `id` (uuid, primary key)
+* `created_at` (timestamp)
+* `user_id` (uuid)
+* `title` (text)
+* `url` (text)
+
+---
+
+## Problems Faced and Solutions
+
+### 1. Delete Operation Not Working
+
+Initially the delete button did not remove bookmarks.
+
+**Cause:**
+Supabase Row Level Security (RLS) policy did not allow delete operations.
+
+**Solution:**
+Created a delete policy allowing users to delete rows where conditions were satisfied.
+
+---
+
+### 2. User Data Visibility Issue
+
+At first all bookmarks were visible to every user.
+
+**Cause:**
+Queries were fetching all rows without filtering by user.
+
+**Solution:**
+Added filtering based on the logged-in user's ID:
+
+```javascript
+.eq("user_id", user.id)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This ensured each user only sees their own bookmarks.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Realtime Updates Not Triggering
 
-## Learn More
+Bookmarks were not updating across multiple tabs.
 
-To learn more about Next.js, take a look at the following resources:
+**Cause:**
+Supabase Realtime was not enabled for the table.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Solution:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* Enabled **Realtime** in Supabase for the `bookmarks` table.
+* Added a realtime listener using:
 
-## Deploy on Vercel
+```javascript
+supabase.channel("bookmarks-realtime")
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Now updates appear instantly across open tabs.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# smart-bookmark-manager
+---
+
+## Setup Instructions
+
+Clone the repository:
+
+```
+git clone https://github.com/amankcodes/smart-bookmark-manager.git
+```
+
+Install dependencies:
+
+```
+npm install
+```
+
+Run the development server:
+
+```
+npm run dev
+```
+
+Create a `.env.local` file and add your Supabase credentials:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+```
+---
+## Future Improvements
+
+* Bookmark categories or tags
+* Bookmark editing feature
+* Better UI/UX improvements
+* Bookmark preview cards
+
+---
+## Author
+
+Aman Kumar
+amankr1705@gmail.com
++91-8252363485

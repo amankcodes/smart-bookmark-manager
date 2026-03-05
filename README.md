@@ -8,7 +8,7 @@ Users can sign in with Google, save personal bookmarks, and see updates in real-
 
 ## Live Demo
 
-(Will be added after deployment)
+https://smart-bookmark-manager-blush.vercel.app/
 
 ---
 
